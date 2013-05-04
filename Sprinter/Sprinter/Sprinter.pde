@@ -1973,6 +1973,22 @@ void ClearToSend()
   //Serial.println("ok");
 }
 
+bool pen_is_up = true;
+
+void pen_up(){
+  if(!pen_is_up){
+    Serial.println("PEN UP");
+    pen_is_up = true;
+  }
+}
+
+void pen_down(){
+  if(pen_is_up){
+    Serial.println("PEN DOWN");
+    pen_is_up = false;
+  }
+}
+
 FORCE_INLINE void get_coordinates()
 {
   for(int i=0; i < NUM_AXIS; i++)
@@ -1981,6 +1997,12 @@ FORCE_INLINE void get_coordinates()
     else destination[i] = current_position[i];                                                       //Are these else lines really needed?
   }
   
+  if (destination[2]>0){
+    pen_up();
+  }else{
+    pen_down();
+  }
+
   if(code_seen('F'))
   {
     next_feedrate = code_value();
