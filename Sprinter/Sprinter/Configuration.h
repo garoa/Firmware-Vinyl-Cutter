@@ -126,14 +126,14 @@ const bool INVERT_E_DIR = false;
 //// ENDSTOP SETTINGS:
 //-----------------------------------------------------------------------
 // Sets direction of endstops when homing; 1=MAX, -1=MIN
-#define X_HOME_DIR -1
+#define X_HOME_DIR 1
 #define Y_HOME_DIR -1
 #define Z_HOME_DIR -1
 
 #define ENDSTOPS_ONLY_FOR_HOMING // If defined the endstops will only be used for homing
 
-const bool min_software_endstops = false; //If true, axis won't move to coordinates less than zero.
-const bool max_software_endstops = true; //If true, axis won't move to coordinates greater than the defined lengths below.
+const bool min_software_endstops = true; //If true, axis won't move to coordinates less than zero.
+const bool max_software_endstops = false; //If true, axis won't move to coordinates greater than the defined lengths below.
 
 
 //-----------------------------------------------------------------------
