@@ -700,7 +700,9 @@
 #define KILL_PIN           -1
 #define ALARM_PIN          -1
 
-#define HEATER_0_PIN       13 // (extruder)
+#define PEN_PIN       13
+
+#define HEATER_0_PIN       -1//13 // (extruder)
 
 #ifdef SANGUINOLOLU_V_1_2
 

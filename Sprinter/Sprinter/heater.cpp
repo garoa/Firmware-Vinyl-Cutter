@@ -204,8 +204,9 @@ ISR(TIMER2_OVF_vect)
       #if LED_PIN > -1
         WRITE(LED_PIN,HIGH);
       #endif
+#if HEATER_0_PIN > -1
       WRITE(HEATER_0_PIN,HIGH);
-
+#endif
       if(g_heater_pwm_val <= 253)
         OCR2A = g_heater_pwm_val; 
       else
@@ -216,7 +217,9 @@ ISR(TIMER2_OVF_vect)
       #if LED_PIN > -1
         WRITE(LED_PIN,LOW);
       #endif
+#if HEATER_0_PIN > -1
       WRITE(HEATER_0_PIN,LOW);
+#endif
       OCR2A = 192; 
     }
   #endif
@@ -261,14 +264,18 @@ ISR(TIMER2_OVF_vect)
      #if LED_PIN > -1
        WRITE(LED_PIN,HIGH);
      #endif
+#if HEATER_0_PIN > -1
      WRITE(HEATER_0_PIN,HIGH);
+#endif
    }
    else
    {
      #if LED_PIN > -1
        WRITE(LED_PIN,LOW);
      #endif
+#if HEATER_0_PIN > -1
      WRITE(HEATER_0_PIN,LOW);
+#endif
    }
    
 
@@ -459,7 +466,9 @@ void PID_autotune(int PIDAT_test_temp)
       #ifdef PID_SOFT_PWM
         g_heater_pwm_val = PIDAT_PWM_val;
       #else
+#if HEATER_0_PIN > -1
         analogWrite_check(HEATER_0_PIN, PIDAT_PWM_val);
+#endif
         #if LED_PIN>-1
           analogWrite_check(LED_PIN, PIDAT_PWM_val);
         #endif
@@ -602,12 +611,16 @@ void PID_autotune(int PIDAT_test_temp)
         if(watch_raw + 1 >= current_raw)
         {
             target_temp = target_raw = 0;
+#if HEATER_0_PIN > -1
             WRITE(HEATER_0_PIN,LOW);
+#endif
 
             #ifdef PID_SOFT_PWM
               g_heater_pwm_val = 0;           
             #else
+#if HEATER_0_PIN > -1
               analogWrite(HEATER_0_PIN, 0);
+#endif
               #if LED_PIN>-1
                 WRITE(LED_PIN,LOW);
               #endif
@@ -676,10 +689,13 @@ void PID_autotune(int PIDAT_test_temp)
           g_heater_pwm_val = 0;
       #else
         if(target_raw != 0)
+#if HEATER_0_PIN > -1
           analogWrite(HEATER_0_PIN, heater_duty);
+#endif
         else
+#if HEATER_0_PIN > -1
           analogWrite(HEATER_0_PIN, 0);
-    
+#endif
         #if LED_PIN>-1
           if(target_raw != 0)
             analogWrite(LED_PIN, constrain(LED_PWM_FOR_BRIGHTNESS(heater_duty),0,255));
@@ -692,7 +708,9 @@ void PID_autotune(int PIDAT_test_temp)
     
       if(current_raw >= target_raw)
       {
+#if HEATER_0_PIN > -1
         WRITE(HEATER_0_PIN,LOW);
+#endif
         #if LED_PIN>-1
             WRITE(LED_PIN,LOW);
         #endif
@@ -701,7 +719,9 @@ void PID_autotune(int PIDAT_test_temp)
       {
         if(target_raw != 0)
         {
+#if HEATER_0_PIN > -1
           WRITE(HEATER_0_PIN,HIGH);
+#endif
           #if LED_PIN > -1
               WRITE(LED_PIN,HIGH);
           #endif

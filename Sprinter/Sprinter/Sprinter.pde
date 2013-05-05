@@ -437,7 +437,9 @@ unsigned char manage_monitor = 255;
     boolean done = false;
     
     //force heater pins low
+#if HEATER_0_PIN > -1
     if(HEATER_0_PIN > -1) WRITE(HEATER_0_PIN,LOW);
+#endif
     if(HEATER_1_PIN > -1) WRITE(HEATER_1_PIN,LOW);
     
   #ifdef PIDTEMP
@@ -777,6 +779,11 @@ void setup()
   #endif
   #endif
   
+  #if (PEN_PIN > -1) 
+    SET_OUTPUT(PEN_PIN);
+    WRITE(PEN_PIN,LOW);
+  #endif
+
   #if (HEATER_0_PIN > -1) 
     SET_OUTPUT(HEATER_0_PIN);
     WRITE(HEATER_0_PIN,LOW);
@@ -1977,6 +1984,7 @@ bool pen_is_up = true;
 
 void pen_up(){
   if(!pen_is_up){
+    analogWrite(PEN_PIN, 0);
     Serial.println("PEN UP");
     pen_is_up = true;
   }
@@ -1984,6 +1992,7 @@ void pen_up(){
 
 void pen_down(){
   if(pen_is_up){
+    analogWrite(PEN_PIN, 255);
     Serial.println("PEN DOWN");
     pen_is_up = false;
   }
@@ -2100,11 +2109,17 @@ void prepare_arc_move(char isclockwise)
 
 FORCE_INLINE void kill()
 {
+  #if PEN_PIN > -1
+    WRITE(PEN_PIN,LOW);
+  #endif
+
   #if TEMP_0_PIN > -1
     target_raw=0;
+#if HEATER_0_PIN > -1
     WRITE(HEATER_0_PIN,LOW);
+#endif
   #endif
-  
+
   #if TEMP_1_PIN > -1
     target_bed_raw=0;
     if(HEATER_1_PIN > -1) WRITE(HEATER_1_PIN,LOW);
