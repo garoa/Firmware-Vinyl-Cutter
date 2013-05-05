@@ -85,6 +85,7 @@ typedef struct {
   long final_rate;                          // The minimal rate at exit
   long acceleration_st;                              // acceleration steps/sec^2
   volatile char busy;
+  bool pen_up;
 } block_t;
 
 

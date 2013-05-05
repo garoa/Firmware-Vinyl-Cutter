@@ -2006,12 +2006,6 @@ FORCE_INLINE void get_coordinates()
     else destination[i] = current_position[i];                                                       //Are these else lines really needed?
   }
   
-  if (destination[2]>0){
-    pen_up();
-  }else{
-    pen_down();
-  }
-
   if(code_seen('F'))
   {
     next_feedrate = code_value();
@@ -2570,6 +2564,12 @@ void plan_buffer_line(float x, float y, float z, float e, float feed_rate)
   
   // Mark block as not busy (Not executed by the stepper interrupt)
   block->busy = false;
+
+  if (target[Z_AXIS]>0){
+    block->pen_up=true;
+  }else{
+    block->pen_up=false;
+  }
 
   // Number of steps for each axis
   block->steps_x = labs(target[X_AXIS]-position[X_AXIS]);
@@ -3156,6 +3156,11 @@ ISR(TIMER1_COMPA_vect)
     // Anything in the buffer?
     current_block = plan_get_current_block();
     if (current_block != NULL) {
+      if (current_block->pen_up)
+        pen_up();
+      else
+        pen_down();
+
       trapezoid_generator_reset();
       counter_x = -(current_block->step_event_count >> 1);
       counter_y = counter_x;
